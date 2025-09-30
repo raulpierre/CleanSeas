@@ -15,8 +15,9 @@ public class Hook {
     private float velLateral = 300;//velocidaed desvio do anzol
     private float width;
     private float height;
-    private float velY = 30;//para calcular a gravidade
-    private float g;//gravidade
+    private float velY = 30; //para calcular a gravidade
+    private float g; //gravidade
+    private float scale = 0.2f;
 
     public Hook(Texture texture, float startX, float startY){
         this.texture = texture;
@@ -28,7 +29,7 @@ public class Hook {
 
     public void update(float delta, float Xboat, float YBoat) {
         float limEsq = Xboat - 20;//limite desvio para esquerda
-        float limDir = Xboat + 20;//limite de desvio para a direita
+        float limDir = Xboat + 180;//limite de desvio para a direita
 
         //relacionado aos movimentos no eixo Y
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -67,17 +68,14 @@ public class Hook {
             }
         }
         else {
-            if (x < Xboat) {
+            float alvo = Xboat + 138;
+            if (x < alvo) {
                 x += velLateral * delta;
-                if (x > Xboat) {
-                    x = Xboat;
-                }
+                if (x > alvo) x = alvo;
             }
-            else if (x > Xboat) {
+            else if (x > alvo) {
                 x -= velLateral * delta;
-                if (x < Xboat) {
-                    x = Xboat;
-                }
+                if (x < alvo) x = alvo;
             }
         }
     }
@@ -95,7 +93,10 @@ public class Hook {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, x, y);
+        float width = texture.getWidth() * scale;
+        float height = texture.getHeight() * scale;
+
+        batch.draw(texture, x - 8, y, width, height);
     }
 
     public void dispose(){

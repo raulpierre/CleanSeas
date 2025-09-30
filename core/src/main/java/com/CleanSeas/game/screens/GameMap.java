@@ -107,10 +107,11 @@ public class GameMap implements Screen{
         camera = new OrthographicCamera();
         viewport = new StretchViewport(1280, 720, camera);
         viewport.apply();
+
         //Carrega as imagem
         map = game.assets.get("gamemap.png",Texture.class);
-        b = new Boat(game.assets.get("img_testes.png",Texture.class));
-        h = new Hook(game.assets.get("anzol_testes.png",Texture.class), b.getX(), b.getY() - 20);
+        b = new Boat(game.assets.get("pescador.png",Texture.class));
+        h = new Hook(game.assets.get("anzol.png",Texture.class), b.getX() + 138, b.getY() - 20);
         Ts = new Array<>();
         Fs = new Array<>();
         r = new Random();
@@ -210,7 +211,7 @@ public class GameMap implements Screen{
             needsGameOverTransition = true;
         }
 
-        if (Score >= 1) {
+        if (Score >= 100) {
             needsVictoryTransition = true;
         }
 
@@ -256,6 +257,24 @@ public class GameMap implements Screen{
         b.draw(game.batch);
         h.draw(game.batch);
         game.batch.end();
+
+        shaperenderer.setProjectionMatrix(camera.combined);
+        shaperenderer.begin(ShapeRenderer.ShapeType.Line);
+        shaperenderer.setColor(Color.WHITE);
+
+        float startX = b.getX() + 138;   // ajuste horizontal
+        float startY = b.getY() + 130;   // ajuste vertical
+
+        float endX = h.getX();
+        float endY = h.getY() + 20;
+
+        // Desenha a linha
+        shaperenderer.line(startX, startY, endX, endY);
+        shaperenderer.end();
+        shaperenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shaperenderer.setColor(Color.BLACK);
+        shaperenderer.rectLine(startX, startY, endX, endY, 3f); // largura 4px
+        shaperenderer.end();
 
         DrawBar(hudX, hudY, hudWidth, hudHeight, lifePct);
 
