@@ -16,6 +16,7 @@ public class Fish {
     private Texture texture;
     private float x, y;
     private float velX, velY;
+    private float scale = 2f;
     private float rotationAngle = 0f;
     private boolean facingRight = true;
 
@@ -157,7 +158,7 @@ public class Fish {
         batch.draw(texture,
             x, y,
             texture.getWidth() / 2f, texture.getHeight() / 2f,
-            texture.getWidth(), texture.getHeight(),
+            texture.getWidth() * scale, texture.getHeight() * scale,
             1f, 1f,
             rotationAngle,
             0, 0,

@@ -10,6 +10,8 @@ public class Boat {
     private float x = 100;
     private float y = 450;
     private float vel = 100;
+    private float scale = 0.15f;
+
 
     public Boat(Texture texture){
         this.texture = texture;
@@ -39,8 +41,13 @@ public class Boat {
         return y;
     }
 
+    public float getWidth() {return texture.getWidth();}
+
     public void draw(SpriteBatch batch){
-        batch.draw(texture, x, y);
+        float width = texture.getWidth() * scale;
+        float height = texture.getHeight() * scale;
+
+        batch.draw(texture, x, y, width, height);
     }
 
     public void dispose(){

@@ -13,6 +13,7 @@ public class Trash implements Poolable{
     public Texture texture;
     private float x;
     private float y;
+    private float scale = 1.5f;
     public Depth depth;
 
     public Trash(){
@@ -42,7 +43,10 @@ public class Trash implements Poolable{
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, x, y);
+        float width = texture.getWidth() * scale;
+        float height = texture.getHeight() * scale;
+
+        batch.draw(texture, x, y, width, height);
     }
 
     public boolean ScreenOut(float ScreenWidth, float ScreenHeight){
