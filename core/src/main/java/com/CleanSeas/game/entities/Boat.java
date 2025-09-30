@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Boat {
     private Texture texture;
     private float x = 100;
-    private float y = 300;
+    private float y = 450;
     private float vel = 100;
 
     public Boat(Texture texture){

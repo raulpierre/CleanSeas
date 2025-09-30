@@ -19,7 +19,7 @@ public class CleanSeas extends Game {
         assets.load("gamemap.png", com.badlogic.gdx.graphics.Texture.class);
         assets.load("img_testes.png", com.badlogic.gdx.graphics.Texture.class);
         assets.load("anzol_testes.png", com.badlogic.gdx.graphics.Texture.class);
-        assets.load("peixe.png", com.badlogic.gdx.graphics.Texture.class);
+        assets.load("Clownfish.png", com.badlogic.gdx.graphics.Texture.class);
         assets.load("garrafapet.png", com.badlogic.gdx.graphics.Texture.class);
 
         assets.finishLoading();

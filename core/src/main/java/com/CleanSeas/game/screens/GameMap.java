@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Pool;
 //imports do meu jogo
 import com.CleanSeas.game.CleanSeas;
 import com.CleanSeas.game.entities.Boat;
@@ -36,6 +37,12 @@ public class GameMap implements Screen{
     private Hook h;
     private OceanCurrent c;
     private Array<Trash> Ts;//array de lixo;
+    private Pool<Trash> trashPool = new Pool<Trash>(){
+            @Override
+            protected Trash newObject() {
+                return new Trash();
+            }
+    };
     private Array<Fish> Fs;
     private Random r;// numeros aleatorio para a criacao do lixo;
     private float TD;// tempo onde surge novos lixos;
@@ -91,7 +98,7 @@ public class GameMap implements Screen{
             float startX = MathUtils.random(20f, Gdx.graphics.getWidth());
             float startY = MathUtils.random(25f, (Gdx.graphics.getHeight() - 350f));
 
-            Fs.add(new Fish(game.assets.get("peixe.png", Texture.class), startX, startY));
+            Fs.add(new Fish(game.assets.get("Clownfish.png", Texture.class), startX, startY));
         }
     }
 
@@ -147,11 +154,11 @@ public class GameMap implements Screen{
         font.setColor(Color.WHITE);
         font.draw(game.batch, "Score: " + Score, hudX, hudY + hudHeight);
         font.draw(game.batch, "Tempo: " + (int)timeScore, hudX + 250, hudY + hudHeight);
-        font.draw(game.batch, "Vida: " + (int)Life, hudX +450, hudY + hudHeight);
+        font.draw(game.batch, "Vida: " + (int)Life, hudX , hudY - hudHeight);
 
 
 
-        spawnTrash(Ts, Score, delta);
+        spawnTrash(Ts, delta);
 
         spawnFish(Fs, Hpos, delta);
 
@@ -187,10 +194,10 @@ public class GameMap implements Screen{
 
     private void spawnFish(Array<Fish> Fs, Vector2 Hpos, float delta){
         for(Fish f : Fs) {
-            f.update(delta, c,  viewport, Hpos);
+            f.update(delta, viewport, Hpos);
         }
         for (Fish f : Fs) {
-            if (f.canDamage() && f.getBounds().overlaps(h.getBounds())) {
+            if (f.canDamage() && h.getBounds().overlaps(f.getBounds())) {
                 Life -= 25;
                 f.markHit();
             }
@@ -200,37 +207,42 @@ public class GameMap implements Screen{
         }
     }
 
-    private void spawnTrash(Array<Trash> Ts, float Score, float delta) {
+    private void spawnTrash(Array<Trash> Ts,  float delta) {
         TD += delta;
         if (TD > nextSpawnTime && Ts.size < MAX_TRASH) {
             TD = 0;
             nextSpawnTime = MathUtils.random(minSpawnTime, maxSpawnTime);
+            Trash t =  trashPool.obtain();
             int camada = r.nextInt(3);
             //escolher aleatoriamente a camada onde se surege o lixo
-            Ts.add(new Trash(game.assets.get("garrafapet.png", Texture.class), r.nextFloat() * (Gdx.graphics.getWidth() - 10), YTrash(camada), camada));
+            t.init(game.assets.get("garrafapet.png", Texture.class), r.nextFloat() * (Gdx.graphics.getWidth() - 10), YTrash(camada), camada);
+            Ts.add(t);
         }
-        for (Iterator<Trash> it = Ts.iterator(); it.hasNext();) {
-            Trash t = it.next();
+        for (int i = Ts.size - 1; i >= 0; i--) {
+            Trash t = Ts.get(i);
             t.update(delta, c);
-            t.draw(game.batch);
-            //remove se saiu da tela
             if (h.getBounds().overlaps(t.getBounds())) {
                 Score += t.depth.points;
-                it.remove();
+                Ts.removeIndex(i);
+                trashPool.free(t);
+                continue;
             }
             if (t.ScreenOut(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())) {
-                it.remove();
+                Ts.removeIndex(i);
+                trashPool.free(t);
+                continue;
             }
+            t.draw(game.batch);
         }
     }
     private float YTrash(int camada){
         float y;
         switch (camada) {
             case 0:
-                y = viewport.getWorldHeight() - 350;
+                y = b.getY();
                 break;
             case 1:
-                y = viewport.getWorldWidth() / 2f - 150;
+                y = b.getY() - 200;
                 break;
             default :
                 y = 25;
