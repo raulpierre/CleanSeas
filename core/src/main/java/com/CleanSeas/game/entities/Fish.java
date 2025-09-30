@@ -14,6 +14,7 @@ public class Fish {
     private Texture texture;
     private float x, y;
     private float velX, velY;
+    private float scale = 2f;
 
     // timers
     private float timeDirection;
@@ -116,11 +117,14 @@ public class Fish {
     }
 
     public void draw(SpriteBatch batch){
+        float width = texture.getWidth() * scale;
+        float height = texture.getHeight() * scale;
+
         if (facingRight) {
-            batch.draw(texture, x, y);
+            batch.draw(texture, x, y, width, height);
         } else {
             // desenha invertido horizontalmente
-            batch.draw(texture, x + texture.getWidth(), y, -texture.getWidth(), texture.getHeight());
+            batch.draw(texture, x + texture.getWidth(), y, -width, height);
         }
     }
 

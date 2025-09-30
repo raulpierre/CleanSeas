@@ -116,7 +116,6 @@ public class VictoryScreen implements Screen {
         game.batch.begin();
 
         // Desenha o mapa do jogo como fundo
-
         game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 

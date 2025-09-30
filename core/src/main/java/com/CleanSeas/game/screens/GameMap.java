@@ -38,6 +38,8 @@ public class GameMap implements Screen{
     private Array<Fish> Fs;
     private Random r;// numeros aleatorio para a criacao do lixo;
     private float TD;// tempo onde surge novos lixos;
+    private String skin;
+    private String skinLixo;
 
     /**HUD*/
     private BitmapFont font;
@@ -93,7 +95,7 @@ public class GameMap implements Screen{
     }
 
     // Botões do menu pause
-    private Button btnContinuar, btnReiniciar, btnMenu, btnSair;
+    private Button btnContinuar, btnReiniciar, btnSair;
 
     public GameMap(CleanSeas game){
         this.game = game;// guarda a referencia
@@ -136,7 +138,20 @@ public class GameMap implements Screen{
             float startX = MathUtils.random(20f, Gdx.graphics.getWidth());
             float startY = MathUtils.random(25f, (Gdx.graphics.getHeight() - 350f));
 
-            Fs.add(new Fish(game.assets.get("peixe.png", Texture.class), startX, startY));
+            switch (r.nextInt(3)){
+                case 0:
+                    skin = "peixes/anchovy.png";
+                    break;
+                case 1:
+                    skin = "peixes/pufferfish.png";
+                    break;
+                default:
+                    skin = "peixes/surgeonfis.png";
+                    break;
+            }
+
+
+            Fs.add(new Fish(game.assets.get(skin, Texture.class), startX, startY));
         }
     }
 
@@ -152,9 +167,7 @@ public class GameMap implements Screen{
             "Continuar", new Color(0.3f, 0.8f, 0.4f, 1f));
         btnReiniciar = new Button(centerX - buttonWidth/2, startY - buttonSpacing, buttonWidth, buttonHeight,
             "Reiniciar", new Color(1f, 0.7f, 0.2f, 1f));
-        btnMenu = new Button(centerX - buttonWidth/2, startY - buttonSpacing * 2, buttonWidth, buttonHeight,
-            "Menu Principal", new Color(0.5f, 0.5f, 0.9f, 1f));
-        btnSair = new Button(centerX - buttonWidth/2, startY - buttonSpacing * 3, buttonWidth, buttonHeight,
+        btnSair = new Button(centerX - buttonWidth/2, startY - buttonSpacing * 2, buttonWidth, buttonHeight,
             "Sair do Jogo", new Color(0.9f, 0.3f, 0.3f, 1f));
     }
 
@@ -314,8 +327,18 @@ public class GameMap implements Screen{
             TD = 0;
             nextSpawnTime = MathUtils.random(minSpawnTime, maxSpawnTime);
             int camada = r.nextInt(3);
+
+            switch (r.nextInt(2)){
+                case 0:
+                    skinLixo = "trash/rusty.png";
+                    break;
+                default:
+                    skinLixo = "trash/worm.png";
+                    break;
+            }
+
             //escolher aleatoriamente a camada onde se surege o lixo
-            Ts.add(new Trash(game.assets.get("garrafapet.png", Texture.class), r.nextFloat() * (Gdx.graphics.getWidth() - 10), YTrash(camada), camada));
+            Ts.add(new Trash(game.assets.get(skinLixo, Texture.class), r.nextFloat() * (Gdx.graphics.getWidth() - 10), YTrash(camada), camada));
         }
         for (Iterator<Trash> it = Ts.iterator(); it.hasNext();) {
             Trash t = it.next();
@@ -350,7 +373,7 @@ public class GameMap implements Screen{
 
     private void renderPauseMenu() {
         float panelWidth = 450;
-        float panelHeight = 500;
+        float panelHeight = 450;
 
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
@@ -377,7 +400,7 @@ public class GameMap implements Screen{
         shaperenderer.end();
 
         // Desenha os botões
-        Button[] buttons = {btnContinuar, btnReiniciar, btnMenu, btnSair};
+        Button[] buttons = {btnContinuar, btnReiniciar, btnSair};
         for (Button btn : buttons) {
             btn.updateHover(mouseX, mouseY);
 
@@ -435,8 +458,6 @@ public class GameMap implements Screen{
                 Gdx.input.setInputProcessor(null);
             } else if (btnReiniciar.isClicked(mouseX, mouseY)) {
                 game.setScreen(new GameMap(game));
-            } else if (btnMenu.isClicked(mouseX, mouseY)) {
-                // game.setScreen(new MainMenuScreen(game));
             } else if (btnSair.isClicked(mouseX, mouseY)) {
                 Gdx.app.exit();
             }

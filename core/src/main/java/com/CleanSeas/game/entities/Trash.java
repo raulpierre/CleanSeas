@@ -12,6 +12,7 @@ public class Trash {
     public Texture texture;
     private float x;
     private float y;
+    private float scale = 1.5f;
     public Depth depth;
 
     public Trash(Texture texture, float x, float y, int camada){
@@ -38,7 +39,10 @@ public class Trash {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, x, y);
+        float width = texture.getWidth() * scale;
+        float height = texture.getHeight() * scale;
+
+        batch.draw(texture, x, y, width, height);
     }
 
     public boolean ScreenOut(float ScreenWidth, float ScreenHeight){
