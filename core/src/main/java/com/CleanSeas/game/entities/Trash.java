@@ -40,7 +40,7 @@ public class Trash implements Poolable{
     public void update(float delta, OceanCurrent C) {
         x += C.getSpeedX() * delta;
     }
-
+    //jose
 
 
     public void draw(SpriteBatch batch) {
