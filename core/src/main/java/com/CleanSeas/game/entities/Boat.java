@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Boat {
     private Texture texture;
     private float x = 100;
-    private float y = 450;
+    private float y = 420;
     private float vel = 100;
     private float scale = 0.15f;
 
@@ -26,10 +26,10 @@ public class Boat {
         }
         // teste para ver se saiu do limite da tela
         if (x < 0){
-            x += texture.getWidth();
+            x += texture.getWidth()* scale;
         }
-        else if( x + texture.getWidth() > Gdx.graphics.getWidth()){
-            x = Gdx.graphics.getWidth() - texture.getWidth();
+        else if( x + texture.getWidth() * scale > Gdx.graphics.getWidth()){
+            x = Gdx.graphics.getWidth() - texture.getWidth() * scale;
         }
     }
 

@@ -73,7 +73,10 @@ public class Fish {
 
             case ALERT:
                 alertTime -= delta;
+                x += MathUtils.random(-2f, 2f);
+                y += MathUtils.random(-2f, 2f);
                 updateRotationToHook(hookPos);
+
                 if(alertTime <= 0f){
                     state = State.ATTACK;
                     toHook.set(hookPos.x - (x + texture.getWidth()/2f),
@@ -167,7 +170,7 @@ public class Fish {
     }
 
     public Rectangle getBounds(){
-        return new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+        return new Rectangle(x, y, texture.getWidth() * scale , texture.getHeight() * scale);
     }
 
     public boolean canDamage(){ return state == State.ATTACK && !alreadyHit; }

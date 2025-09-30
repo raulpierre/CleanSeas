@@ -18,6 +18,7 @@ public class Hook {
     private float velY = 30; //para calcular a gravidade
     private float g; //gravidade
     private float scale = 0.2f;
+    private boolean guarda = true;
 
     public Hook(Texture texture, float startX, float startY){
         this.texture = texture;
@@ -32,56 +33,59 @@ public class Hook {
         float limDir = Xboat + 180;//limite de desvio para a direita
 
         //relacionado aos movimentos no eixo Y
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if(y > YBoat - 20){
-                y = YBoat - 20;
-            }
-            else{
-                y += velY * 2.0f * delta;
-            }
+        if(Gdx.input.isKeyPressed(Input.Keys.F)){
+            guarda = false;
+            y = YBoat + 60;
         }
-        else {
-            if (y < 25) {
-                g = 0;
-            } else {
-                g = velY * delta;
+        if(guarda == false){
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                if(y > YBoat - 20){
+                    guarda = true;
+                    y = YBoat - 20;
+                }
+                else{
+                    y += velY * 6.0f * delta;
+                }
             }
 
-            y -= g;
-        }
+            if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+                    y -= velY * 4.0f * delta;
 
-        //Calcula o movimento de desvio do anzol
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (x <= limEsq){
-                x = limEsq;
+            }
+
+            //Calcula o movimento de desvio do anzol
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                if (x <= limEsq){
+                    x = limEsq;
+                }
+                else {
+                    x -= velLateral * delta;
+                }
+            }
+            else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+                if (x >= limDir){
+                    x = limDir;
+                }
+              else {
+                x += velLateral * delta;
+              }
             }
             else {
-                x -= velLateral * delta;
-            }
-        }
-        else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            if (x >= limDir){
-                x = limDir;
-            }
-            else {
-                x += velLateral * delta;
-            }
-        }
-        else {
-            float alvo = Xboat + 138;
-            if (x < alvo) {
-                x += velLateral * delta;
-                if (x > alvo) x = alvo;
-            }
-            else if (x > alvo) {
-                x -= velLateral * delta;
-                if (x < alvo) x = alvo;
+                float alvo = Xboat + 138;
+                if (x < alvo) {
+                    x += velLateral * delta;
+                    if (x > alvo) x = alvo;
+                }
+                else if (x > alvo) {
+                    x -= velLateral * delta;
+                    if (x < alvo) x = alvo;
+                }
             }
         }
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+        return new Rectangle(x, y, texture.getWidth() * scale, texture.getHeight() * scale);
     }
 
     public float getX() {

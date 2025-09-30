@@ -38,9 +38,10 @@ public class Trash implements Poolable{
     }
 
     public void update(float delta, OceanCurrent C) {
-        //y -= * delta;
         x += C.getSpeedX() * delta;
     }
+
+
 
     public void draw(SpriteBatch batch) {
         float width = texture.getWidth() * scale;
